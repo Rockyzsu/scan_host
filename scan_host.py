@@ -30,6 +30,8 @@ for i in area:
 
 for i in range(100,256):
     ip = "192.168.1." + str(i)
-    #print ip
+    print ip
     if scan(ip, port):
-        print "%s ssh" %ip
+        print "%s ssh open" %ip
+
+print "*****end*****"
