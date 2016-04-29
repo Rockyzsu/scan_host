@@ -1,5 +1,6 @@
 import socket
-
+import time
+from thread_test import MyThread
 
 socket.setdefaulttimeout(1)
 port = 22
@@ -27,11 +28,29 @@ for i in area:
         if result :
             print "VNC" 
 '''
-
-for i in range(100,256):
-    ip = "192.168.1." + str(i)
+'''
+for i in range(1,256):
+    ip = "10.19.134." + str(i)
     print ip
     if scan(ip, port):
         print "%s ssh open" %ip
+'''
+threads=[]
+def test_fun():
+	print "Test"
+for i in range(20):
+	t=MyThread(test_fun,())
+	threads.append(t)
+
+for i in range(20):
+	threads[i].start()
+
+
+
+
+
+time.sleep(3
+
+
 
 print "*****end*****"
