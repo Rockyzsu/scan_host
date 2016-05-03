@@ -4,6 +4,10 @@ from thread_test import MyThread
 
 socket.setdefaulttimeout(1)
 port = 22
+thread_num=8
+ip_end=256
+ip_start=0
+scope=ip_end/thread_num
 
 
 def scan(ip, port):
@@ -35,6 +39,14 @@ for i in range(1,256):
     if scan(ip, port):
         print "%s ssh open" %ip
 '''
+ip_range=[]
+for i in range(thread_num):
+	x_range=[i*scope,(i+1)*scope-1]
+	ip_range.append(x_range)
+
+print ip_range
+
+'''
 threads=[]
 def test_fun():
 	print "Test"
@@ -46,11 +58,13 @@ for i in range(20):
 	threads[i].start()
 
 
+for i in range(20):
+	threads[i].join()
 
 
 
-time.sleep(3
-
+time.sleep(3)
+'''
 
 
 print "*****end*****"
