@@ -10,16 +10,24 @@ ip_start=0
 scope=ip_end/thread_num
 
 
-def scan(ip, port):
+def scan(ip_low, port):
     try:
         # Alert !!! below statement should be inside scan function. Else each it is one s
-        s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        ip="10.19.134."+str(ip_low)
+	#print ip
+	s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         s.connect((ip, port))
         s.close()
+	print "ip %s port %d open" %(ip,port)
         return True
     except:
         return False
 
+
+def scan_range(ip_range,port):
+	start,end=ip_range
+	for i in range(start,end):
+		scan(i,port)
 
 '''
 ip_start="10.19."
@@ -43,8 +51,20 @@ ip_range=[]
 for i in range(thread_num):
 	x_range=[i*scope,(i+1)*scope-1]
 	ip_range.append(x_range)
-
 print ip_range
+
+threads=[]
+for i in range(thread_num):
+	t=MyThread(scan_range,(ip_range[i],22))
+	threads.append(t)
+for i in range(thread_num):
+	threads[i].start()
+for i in range(thread_num):
+	threads[i].join()
+
+
+
+
 
 '''
 threads=[]
