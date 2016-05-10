@@ -1,33 +1,33 @@
-import socket
+import socket,sys
 import time
 from thread_test import MyThread
 
 socket.setdefaulttimeout(1)
-port = 22
-thread_num=8
+thread_num=4
 ip_end=256
 ip_start=0
+#port = 22
 scope=ip_end/thread_num
 
 
-def scan(ip_low, port):
+def scan(ip_head,ip_low, port):
     try:
         # Alert !!! below statement should be inside scan function. Else each it is one s
-        ip="10.19.134."+str(ip_low)
-	#print ip
+        ip=ip_head+str(ip_low)
+	print ip
 	s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        s.connect((ip, port))
+	s.connect((ip, port))
         s.close()
-	print "ip %s port %d open" %(ip,port)
+	print "ip %s port %d open\n" %(ip,port)
         return True
     except:
         return False
 
 
-def scan_range(ip_range,port):
+def scan_range(ip_head,ip_range,port):
 	start,end=ip_range
 	for i in range(start,end):
-		scan(i,port)
+		scan(ip_head,i,port)
 
 '''
 ip_start="10.19."
@@ -47,15 +47,26 @@ for i in range(1,256):
     if scan(ip, port):
         print "%s ssh open" %ip
 '''
+if len(sys.argv)<3:
+	print "input ip and port"
+	exit()
+
+ip_head=sys.argv[1]
+print type(ip_head)
+
+
+port=int(sys.argv[2])
+print type(port)
+
 ip_range=[]
 for i in range(thread_num):
 	x_range=[i*scope,(i+1)*scope-1]
 	ip_range.append(x_range)
-print ip_range
+#print ip_range
 
 threads=[]
 for i in range(thread_num):
-	t=MyThread(scan_range,(ip_range[i],22))
+	t=MyThread(scan_range,(ip_head,ip_range[i],port))
 	threads.append(t)
 for i in range(thread_num):
 	threads[i].start()
