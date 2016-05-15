@@ -3,12 +3,12 @@ import time
 from thread_test import MyThread
 
 socket.setdefaulttimeout(1)
+#设置每个线程socket的timeou时间，超过1秒没有反应就认为端口不开放
 thread_num=4
+#线程数目 
 ip_end=256
 ip_start=0
-#port = 22
 scope=ip_end/thread_num
-
 
 def scan(ip_head,ip_low, port):
     try:
@@ -17,6 +17,7 @@ def scan(ip_head,ip_low, port):
 	print ip
 	s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 	s.connect((ip, port))
+	#通过这一句判断 是否连通
         s.close()
 	print "ip %s port %d open\n" %(ip,port)
         return True
@@ -29,40 +30,18 @@ def scan_range(ip_head,ip_range,port):
 	for i in range(start,end):
 		scan(ip_head,i,port)
 
-'''
-ip_start="10.19."
-area=["133","134"]
-for i in area:
-    for j in range(255):
-        ip_address=ip_start+i+"."+str(j)
-        print ip_address
-        result=scan(ip_address,port)
-        if result :
-            print "VNC" 
-'''
-'''
-for i in range(1,256):
-    ip = "10.19.134." + str(i)
-    print ip
-    if scan(ip, port):
-        print "%s ssh open" %ip
-'''
 if len(sys.argv)<3:
 	print "input ip and port"
 	exit()
 
 ip_head=sys.argv[1]
-print type(ip_head)
-
-
 port=int(sys.argv[2])
-print type(port)
+
 
 ip_range=[]
 for i in range(thread_num):
 	x_range=[i*scope,(i+1)*scope-1]
 	ip_range.append(x_range)
-#print ip_range
 
 threads=[]
 for i in range(thread_num):
@@ -72,30 +51,6 @@ for i in range(thread_num):
 	threads[i].start()
 for i in range(thread_num):
 	threads[i].join()
-
-
-
-
-
-'''
-threads=[]
-def test_fun():
-	print "Test"
-for i in range(20):
-	t=MyThread(test_fun,())
-	threads.append(t)
-
-for i in range(20):
-	threads[i].start()
-
-
-for i in range(20):
-	threads[i].join()
-
-
-
-time.sleep(3)
-'''
-
+	#设置进程阻塞，防止主线程退出了，其他的多线程还在运行
 
 print "*****end*****"
